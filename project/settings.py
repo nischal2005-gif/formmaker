@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-kr6m65x)@f=1yj64)v@85(6w3-47wt1vwo7_+eyn9z3m0lg=f@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['form-maker.onrender.com']
 
 
 # Application definition
