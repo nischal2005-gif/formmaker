@@ -1,7 +1,7 @@
-
-{% load static %}
+<!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +12,16 @@
       background-color: #f4f6f9;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+
     .container-custom {
       max-width: 900px;
       margin: auto;
       background: #ffffff;
       padding: 40px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
+
     #previewArea {
       border: 2px dashed #0d6efd;
       padding: 1.5rem;
@@ -27,221 +29,185 @@
       background: #e9f0ff;
       border-radius: 10px;
     }
+
     .form-label {
       font-weight: 600;
     }
+
     .form-check-label {
       font-weight: 500;
     }
+
     .btn {
       font-weight: 500;
     }
   </style>
 </head>
+
 <body class="py-5">
 
-<div class="container container-custom">
-  <h2 class="mb-4 text-center text-primary">Make Your Own Contact Form</h2>
+  <div class="container container-custom">
+    <h2 class="mb-4 text-center text-primary">Make Your Own Contact Form</h2>
 
     <div class="mb-4">
-    <label class="form-label">Paste Your Contact Form HTML</label>
-    <textarea id="htmlInput" class="form-control" rows="7" placeholder="<form>...</form>"></textarea>
+      <label class="form-label">Paste Your Contact Form HTML</label>
+      <textarea id="htmlInput" class="form-control" rows="7" placeholder="<form>...</form>"></textarea>
+    </div>
+
+    <!-- Sender Email Input -->
+    <div class="mb-4">
+      <label class="form-label">Sender Email (your email address)</label>
+      <input type="email" id="senderEmail" class="form-control" placeholder="youremail@example.com" required>
+    </div>
+
+    <!-- Receiver Email -->
+    <div class="mb-4">
+      <label class="form-label">Receiver Email (company inbox)</label>
+      <input type="email" id="receiverEmail" class="form-control" placeholder="company@example.com" required>
+    </div>
+
+    <!-- SMTP Server Information -->
+
+
+    <div class="mb-4">
+      <label class="form-label">SMTP Host</label>
+      <input type="text" id="smtpHost" class="form-control" placeholder="smtp.gmail.com" required>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label">SMTP Password</label>
+      <input type="password" id="smtpPassword" class="form-control" placeholder="SMTP password" required>
+    </div>
+
+    <div class="mb-4">
+      <small>
+        <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-primary">
+          Click here to create an App Password for Gmail (for SMTP use)
+        </a>
+      </small>
+    </div>
+
+    <!-- reCAPTCHA Checkbox -->
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="enableRecaptcha">
+      <label class="form-check-label" for="enableRecaptcha">Enable Google reCAPTCHA</label>
+    </div>
+
+
+    <!-- Mailback Checkbox -->
+    <div class="form-check mb-4">
+      <input type="checkbox" class="form-check-input" id="enableMailback">
+      <label class="form-check-label" for="enableMailback">Send confirmation email to user</label>
+    </div>
+
+    <!-- Preview Button -->
+    <div class="d-grid mb-4">
+      <button class="btn btn-primary btn-lg" id="navigate">Preview Form</button>
+    </div>
+
+    <!-- Preview Area -->
+    <div id="previewArea" class="mb-5">
+      <h5 class="text-primary mb-3">Live Form Preview</h5>
+      <div id="previewOutput"></div>
+    </div>
+
+    <!-- Final Code Generation -->
+    <div class="d-grid mb-3">
+      <button class="btn btn-success btn-lg" onclick="generateFinalCode()">Generate Embed Code</button>
+    </div>
+
+    <div>
+      <label class="form-label">Generated Embed Code:</label>
+      <textarea id="generatedCode" class="form-control" rows="8" readonly></textarea>
+    </div>
   </div>
 
-  <!-- Sender Email Input -->
-  <div class="mb-4">
-    <label class="form-label">Sender Email (your email address)</label>
-    <input type="email" id="senderEmail" class="form-control" placeholder="youremail@example.com" required>
-  </div>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-  <!-- Receiver Email -->
-  <div class="mb-4">
-    <label class="form-label">Receiver Email (company inbox)</label>
-    <input type="email" id="receiverEmail" class="form-control" placeholder="company@example.com" required>
-  </div>
+  <script>
 
-  <!-- SMTP Server Information -->
-
-
-<div class="mb-4">
-  <label class="form-label">SMTP Host</label>
-  <input type="text" id="smtpHost" class="form-control" placeholder="smtp.gmail.com" required>
-</div>
-
-<div class="mb-4">
-  <label class="form-label">SMTP Password</label>
-  <input type="password" id="smtpPassword" class="form-control" placeholder="SMTP password" required>
-</div>
-
-<div class="mb-4">
-  <small>
-    <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-primary">
-      Click here to create an App Password for Gmail (for SMTP use)
-    </a>
-  </small>
-</div>
-
-  <!-- reCAPTCHA Checkbox -->
-  <div class="form-check mb-3">
-    <input type="checkbox" class="form-check-input" id="enableRecaptcha">
-    <label class="form-check-label" for="enableRecaptcha">Enable Google reCAPTCHA</label>
-  </div>
-
-
-  <!-- Mailback Checkbox -->
-  <div class="form-check mb-4">
-    <input type="checkbox" class="form-check-input" id="enableMailback">
-    <label class="form-check-label" for="enableMailback">Send confirmation email to user</label>
-  </div>
-
-  <!-- Preview Button -->
-  <div class="d-grid mb-4">
-    <button class="btn btn-primary btn-lg" onclick="previewHTML()">Preview Form</button>
-  </div>
-
-  <!-- Preview Area -->
-  <div id="previewArea" class="mb-5">
-    <h5 class="text-primary mb-3">Live Form Preview</h5>
-    <div id="previewOutput"></div>
-  </div>
-
-  <!-- Final Code Generation -->
-  <div class="d-grid mb-3">
-    <button class="btn btn-success btn-lg" onclick="generateFinalCode()">Generate Embed Code</button>
-  </div>
-
-  <div>
-    <label class="form-label">Generated Embed Code:</label>
-    <textarea id="generatedCode" class="form-control" rows="8" readonly></textarea>
-  </div>
-</div>
-
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
-<script>
-
-  // Show reCAPTCHA if checkbox is checked
-  document.getElementById("enableRecaptcha").addEventListener("change", function () {
-    const container = document.getElementById("recaptchaContainer");
-    container.style.display = this.checked ? "block" : "none";
-  });
+    // Show reCAPTCHA if checkbox is checked
+    document.getElementById("enableRecaptcha").addEventListener("change", function () {
+      const container = document.getElementById("recaptchaContainer");
+      container.style.display = this.checked ? "block" : "none";
+    });
 
 
 
-  // Helper to get CSRF token cookie (needed for POST in Django)
-  function getCSRFToken() {
-    let cookieValue = null;
-    const name = 'csrftoken';
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.startsWith(name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
+    // Helper to get CSRF token cookie (needed for POST in Django)
+    function getCSRFToken() {
+      let cookieValue = null;
+      const name = 'csrftoken';
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+          cookie = cookie.trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
         }
       }
+      return cookieValue;
     }
-    return cookieValue;
-  }
 
-  // Preview form based on user's HTML input
-  function previewHTML() {
+    // Preview form based on user's HTML input
+
+      const navButton = document.getElementById("navigate");
+  const previewHTML = () => {
+
     const htmlCode = document.getElementById("htmlInput").value;
-    const previewDiv = document.getElementById("previewOutput");
-    const useCaptcha = document.getElementById("enableRecaptcha").checked;
+      const previewDiv = document.getElementById("previewOutput");
+      const useCaptcha = document.getElementById("enableRecaptcha").checked;
 
-    previewDiv.innerHTML = htmlCode;
+      previewDiv.innerHTML = htmlCode;
 
-    const form = previewDiv.querySelector("form");
-    if (form) {
+      const form = previewDiv.querySelector("form");
+      if (form) {
       if (useCaptcha) {
         const captchaDiv = document.createElement("div");
-        captchaDiv.className = "g-recaptcha";
-        captchaDiv.setAttribute("data-sitekey", "6LfIjXorAAAAAF_-h9v731lG4X8gdOLUpwmYxzgp");
-        form.appendChild(captchaDiv);
+      captchaDiv.className = "g-recaptcha";
+      captchaDiv.setAttribute("data-sitekey", "6LfIjXorAAAAAF_-h9v731lG4X8gdOLUpwmYxzgp");
+      form.appendChild(captchaDiv);
 
-        if (typeof grecaptcha !== 'undefined') {
-          grecaptcha.render(captchaDiv);
+      if (typeof grecaptcha !== 'undefined') {
+        grecaptcha.render(captchaDiv);
         }
       }
 
       form.addEventListener("submit", handleFormSubmit);
     }
-  }
+  } 
 
-  {% comment %} // Handle the form submission logic
-function handleFormSubmit(event) {
-    event.preventDefault();
+  navButton.addEventListener("click", () => previewHTML());
 
-    const formElements = event.target.elements;
-    const formData = {};
-    for (let el of formElements) {
-      if (el.name) {
-        formData[el.name] = el.value;
-      }
-    }
 
-    const sender = document.getElementById("senderEmail").value;
-    const receiver = document.getElementById("receiverEmail").value;
-    const smtpHost = document.getElementById("smtpHost").value;  // Add this input in your HTML
-    const smtpPassword = document.getElementById("smtpPassword").value;  // Add this input in your HTML
-    const smtpPort = 587; // Can be a fixed value or from the form
-    const useCaptcha=document.getElementById("enableRecaptcha").checked;
+  </script>
+  <script>
 
-    if (useCaptcha){
-      const captchaResponse = grecaptcha.getResponse();
-      if (!captchaResponse){
-        alert("Please complete the verififcation before submitting.")
-        return
-      }
-    }
-
-    if (!sender || !receiver || !smtpHost || !smtpPassword) {
-      alert("All fields are required.");
-      return;
-    }
-
-    fetch("/submit-contact/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        senderEmail: sender,
-        receiverEmail: receiver,
-        formData: formData,
-        smtpHost: smtpHost,
-        smtpPassword: smtpPassword,
-        smtpPort: smtpPort,
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      alert(data.message || "Form submitted successfully!");
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Something went wrong while submitting the form.");
-    });
-} {% endcomment %}
-  {% comment %} function handleFormSubmit(event) {
+  async function handleFormSubmit(event) {
   event.preventDefault();
+
+  try {
+  // Show loading state
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  if (submitBtn) {
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = 'Sending...';
+  }
 
   const formElements = event.target.elements;
   const formData = {};
-  let userEmail=null;
+  let userEmail = null;
+
   for (let el of formElements) {
-    if (el.name) {
-      formData[el.name] = el.value;
-    
-          if (el.name.toLowerCase().includes('email') && el.value.includes('@')) {
-          userEmail = el.value;
-        }
-      }
-    }
-
-
+  if (el.name && el.type !== 'submit') {
+  formData[el.name] = el.value;
+  if (el.name.toLowerCase().includes('email') && el.value.includes('@')) {
+  userEmail = el.value;
+  }
+  }
+  }
 
   const sender = document.getElementById("senderEmail").value;
   const receiver = document.getElementById("receiverEmail").value;
@@ -249,164 +215,107 @@ function handleFormSubmit(event) {
   const smtpPassword = document.getElementById("smtpPassword").value;
   const smtpPort = 587;
   const mailbackEnabled = document.getElementById("enableMailback").checked;
-
-
   const useCaptcha = document.getElementById("enableRecaptcha").checked;
 
-  // ✅ reCAPTCHA validation
+  // Validate required fields
+  if (!sender || !receiver || !smtpHost || !smtpPassword) {
+  throw new Error("Please fill all required SMTP settings in the builder");
+  }
+
+  // reCAPTCHA validation
   if (useCaptcha) {
-    const captchaResponse = grecaptcha.getResponse();
-    if (!captchaResponse) {
-      alert("Please complete the reCAPTCHA before submitting.");
-      return;
-    }
-
-    // Proceed only after reCAPTCHA is verified
-    sendFormData(sender, receiver, smtpHost, smtpPassword, smtpPort, formData, captchaResponse,mailbackEnabled);
-  } else {
-    sendFormData(sender, receiver, smtpHost, smtpPassword, smtpPort, formData, null);
+  const captchaResponse = grecaptcha.getResponse();
+  if (!captchaResponse) {
+  throw new Error("Please complete the reCAPTCHA");
   }
-}
+  }
 
-function sendFormData(sender, receiver, smtpHost, smtpPassword, smtpPort, formData, captchaToken) {
-  fetch("submit-contact/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      senderEmail: sender,
-      receiverEmail: receiver,
-      formData: formData,
-      smtpHost: smtpHost,
-      smtpPassword: smtpPassword,
-      smtpPort: smtpPort,
-      recaptchaToken: captchaToken,  // ✅ send token to Django
-      mailbackEnabled: mailbackEnabled,
-      
-    })
+  // Send to backend
+  const response = await fetch("/submit-contact/", {
+  method: "POST",
+  headers: {
+  "Content-Type": "application/json",
+  "X-CSRFToken": getCSRFToken() // Add CSRF protection
+  },
+  body: JSON.stringify({
+  senderEmail: sender,
+  receiverEmail: receiver,
+  formData: formData,
+  smtpHost: smtpHost,
+  smtpPassword: smtpPassword,
+  smtpPort: smtpPort,
+  recaptchaToken: useCaptcha ? grecaptcha.getResponse() : null,
+  mailbackEnabled: mailbackEnabled,
+  userEmail: userEmail
   })
-  .then(response => response.json())
-  .then(data => {
-    alert(data.message || data.error || "Form submitted!");
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    alert("Something went wrong while submitting the form.");
   });
-} {% endcomment %}
 
-async function handleFormSubmit(event) {
-  event.preventDefault();
-  
-  try {
-    // Show loading state
-    const submitBtn = event.target.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Sending...';
-    }
+  const data = await response.json();
 
-    const formElements = event.target.elements;
-    const formData = {};
-    let userEmail = null;
-    
-    for (let el of formElements) {
-      if (el.name && el.type !== 'submit') {
-        formData[el.name] = el.value;
-        if (el.name.toLowerCase().includes('email') && el.value.includes('@')) {
-          userEmail = el.value;
-        }
-      }
-    }
-
-    const sender = document.getElementById("senderEmail").value;
-    const receiver = document.getElementById("receiverEmail").value;
-    const smtpHost = document.getElementById("smtpHost").value;
-    const smtpPassword = document.getElementById("smtpPassword").value;
-    const smtpPort = 587;
-    const mailbackEnabled = document.getElementById("enableMailback").checked;
-    const useCaptcha = document.getElementById("enableRecaptcha").checked;
-
-    // Validate required fields
-    if (!sender || !receiver || !smtpHost || !smtpPassword) {
-      throw new Error("Please fill all required SMTP settings in the builder");
-    }
-
-    // reCAPTCHA validation
-    if (useCaptcha) {
-      const captchaResponse = grecaptcha.getResponse();
-      if (!captchaResponse) {
-        throw new Error("Please complete the reCAPTCHA");
-      }
-    }
-
-    // Send to backend
-    const response = await fetch("/submit-contact/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken() // Add CSRF protection
-      },
-      body: JSON.stringify({
-        senderEmail: sender,
-        receiverEmail: receiver,
-        formData: formData,
-        smtpHost: smtpHost,
-        smtpPassword: smtpPassword,
-        smtpPort: smtpPort,
-        recaptchaToken: useCaptcha ? grecaptcha.getResponse() : null,
-        mailbackEnabled: mailbackEnabled,
-        userEmail: userEmail
-      })
-    });
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.error || "Form submission failed");
-    }
-
-    alert(data.message || "Form submitted successfully!");
-    event.target.reset();
-    
-    // Reset reCAPTCHA if enabled
-    if (useCaptcha) {
-      grecaptcha.reset();
-    }
-  } catch (error) {
-    console.error("Submission error:", error);
-    alert(error.message || "Something went wrong. Please try again.");
-  } finally {
-    // Reset button state
-    const submitBtn = event.target.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Submit';
-    }
+  if (!response.ok) {
+  throw new Error(data.error || "Form submission failed");
   }
-}
+
+  alert(data.message || "Form submitted successfully!");
+  event.target.reset();
+
+  // Reset reCAPTCHA if enabled
+  if (useCaptcha) {
+  grecaptcha.reset();
+  }
+  } catch (error) {
+  console.error("Submission error:", error);
+  alert(error.message || "Something went wrong. Please try again.");
+  } finally {
+  // Reset button state
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  if (submitBtn) {
+  submitBtn.disabled = false;
+  submitBtn.innerHTML = 'Submit';
+  }
+  }
+  }
 
   // Generate final HTML embed code
   function generateFinalCode() {
-    const formHTML = document.getElementById("htmlInput").value;
-    const receiverEmail = document.getElementById("receiverEmail").value;
-    const senderEmail = document.getElementById("senderEmail").value;
-    const useCaptcha = document.getElementById("enableRecaptcha").checked;
-    const mailback = document.getElementById("enableMailback").checked;
+  const formHTML = document.getElementById("htmlInput").value;
+  const senderEmail = document.getElementById("senderEmail").value;
+  const receiverEmail = document.getElementById("receiverEmail").value;
+  const useCaptcha = document.getElementById("enableRecaptcha").checked;
+  const mailback = document.getElementById("enableMailback").checked;
 
-    let generated = `<!-- Contact Form Embed Code -->\n`;
-    generated += `${formHTML}\n\n`;
-    generated += `<!-- Backend configuration required:\n`;
-    generated += `- Send email from: ${senderEmail}\n`;
-    generated += `- Send to inbox: ${receiverEmail}\n`;
-    generated += `- reCAPTCHA enabled: ${useCaptcha ? 'Yes' : 'No'}\n`;
-    generated += `- Mailback enabled: ${mailback ? 'Yes' : 'No'}\n`;
-    generated += `-->\n`;
+  // Your custom backend URL (e.g., the URL of your deployed form handler)
+  const formAction = "https://formmaker-x2z7.onrender.com/submit-contact";  // Change this to your form handling endpoint
 
-    document.getElementById("generatedCode").value = generated;
-  }
-</script>
+  let generatedCode = `<!-- Contact Form Embed Code -->\n`;
+  generatedCode += `${formHTML}\n\n`;
+
+  // Add custom backend integration and reCAPTCHA support
+  generatedCode += `<!-- Form Action for Your Backend -->
+<form action="${formAction}" method="POST">
+  ${formHTML}
+  <!-- Google reCAPTCHA -->
+  ${useCaptcha ? '<div class="g-recaptcha" data-sitekey="your-recaptcha-site-key"></div>' : ''}
+  <input type="submit" value="Submit">
+</form>
+`;
+
+  // Add mailback and reCAPTCHA settings as comments
+  generatedCode += `<!-- Backend configuration:
+  - Send email from: ${senderEmail} (handled by your backend)
+  - Send to inbox: ${receiverEmail}
+  - reCAPTCHA enabled: ${useCaptcha ? 'Yes' : 'No'}
+  - Mailback enabled: ${mailback ? 'Yes' : 'No'}
+  -->`;
+
+  // Show the generated HTML embed code
+  document.getElementById("generatedCode").value = generatedCode;
+}
+
+  </script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 
 </body>
+
 </html>

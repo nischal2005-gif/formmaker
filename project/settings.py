@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-kr6m65x)@f=1yj64)v@85(6w3-47wt1vwo7_+eyn9z3m0lg=f@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['formmaker.onrender.com', 'formmaker-x2z7.onrender.com']
+ALLOWED_HOSTS = ['formbuilder.onrender.com']
 
 
 # Application definition
@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'form'
+    'form',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -119,6 +122,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:5500',  # If your static site is running on localhost at port 5500
+    'https://formmaker-x2z7.onrender.com',
+]
 
 
 # Static files (CSS, JavaScript, Images)
