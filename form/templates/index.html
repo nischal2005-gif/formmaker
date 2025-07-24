@@ -264,11 +264,9 @@
         }
       }
     }
-
-    // Generate final HTML embed code
 function generateFinalCode() {
   // Collecting input from user fields
-  const formHTML = document.getElementById("htmlInput").value; // User's raw form HTML
+  const formHTML = document.getElementById("htmlInput").value;
   const senderEmail = document.getElementById("senderEmail").value;
   const receiverEmail = document.getElementById("receiverEmail").value;
   const smtpHost = document.getElementById("smtpHost").value;
@@ -276,20 +274,17 @@ function generateFinalCode() {
   const useCaptcha = document.getElementById("enableRecaptcha").checked;
   const mailback = document.getElementById("enableMailback").checked;
 
-  // Backend form action URL
-  const formAction = "https://formbuilder-hbbw.onrender.com/submit-contact/";  // Change this to your form handler URL
+  const formAction = "https://formbuilder-hbbw.onrender.com/submit-contact/";
 
-  // Start the generated code with the user's raw HTML form input
   let generatedCode = `<!-- Contact Form Embed Code -->
   <form action="${formAction}" method="POST">
     ${formHTML.trim()}
-
-    <!-- Google reCAPTCHA (if enabled) -->
-    ${useCaptcha ? `<div class="g-recaptcha" data-sitekey="6LfIjXorAAAAAF_-h9v731lG4X8gdOLUpwmYxzgp"></div>` : ""}
+    ${useCaptcha ? `<!-- Google reCAPTCHA -->
+    <div class="g-recaptcha" data-sitekey="6LfIjXorAAAAAF_-h9v731lG4X8gdOLUpwmYxzgp"></div>` : ""}
   `;
 
-  // JavaScript code (without <script> tags) to be appended
   let jsCode = `
+    <script>
     // Load Google reCAPTCHA script asynchronously
     function loadRecaptchaScript() {
       const script = document.createElement('script');
@@ -300,27 +295,28 @@ function generateFinalCode() {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Load the reCAPTCHA script if enabled
+      // Load the reCAPTCHA script only if enabled
+      ${useCaptcha ? `
       if (document.querySelector('.g-recaptcha')) {
         loadRecaptchaScript();
-      }
+      }` : ''}
 
       const form = document.querySelector('form');
       form.addEventListener('submit', async function(e) {
-        e.preventDefault();  // Prevent the default form submission
+        e.preventDefault();
 
-        // Wait for the reCAPTCHA to be loaded
+        ${useCaptcha ? `
+        // reCAPTCHA validation only if enabled
         if (typeof grecaptcha === 'undefined') {
           alert('reCAPTCHA failed to load. Please try again later.');
           return;
         }
 
-        // Validate reCAPTCHA
         const recaptchaResponse = grecaptcha.getResponse();
         if (!recaptchaResponse) {
           alert('Please complete the reCAPTCHA');
           return;
-        }
+        }` : ''}
 
         const formObject = {
           senderEmail: "${senderEmail}",
@@ -333,59 +329,48 @@ function generateFinalCode() {
           smtpHost: "${smtpHost}",
           smtpPassword: "${smtpPassword}",
           smtpPort: 587,
-          recaptchaToken: recaptchaResponse,
+          ${useCaptcha ? 'recaptchaToken: recaptchaResponse,' : ''}
           mailbackEnabled: ${mailback}
         };
 
         try {
-          // Get the submit button and check if it exists
-          const submitBtn = form.querySelector('input[type="submit"]');
+          const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
           if (submitBtn) {
-            submitBtn.disabled = true;  // Disable the submit button
-            submitBtn.value = 'Sending...';  // Change the button text
+            submitBtn.disabled = true;
+            submitBtn.textContent = submitBtn.value = 'Sending...';
           }
 
-          // Send the form data to the backend
           const response = await fetch("${formAction}", {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formObject)
           });
 
           if (response.ok) {
-            // Only parse the response if it is OK
             const data = await response.json();
             alert(data.message || 'Form submitted successfully!');
-            form.reset();  // Reset the form fields
-            grecaptcha.reset();  // Reset the reCAPTCHA widget
+            form.reset();
+            ${useCaptcha ? 'grecaptcha.reset();' : ''}
           } else {
-            // Handle non-OK responses (such as errors from the server)
-            const errorText = await response.text();  // Get the response as plain text (could be HTML)
+            const errorText = await response.text();
             throw new Error(errorText || 'Form submission failed');
           }
         } catch (error) {
-          // Handle submission errors
           alert(error.message || 'Something went wrong. Please try again.');
           console.error('Submission error:', error);
         } finally {
-          // Re-enable the submit button after the process is finished
-          const submitBtn = form.querySelector('input[type="submit"]');
+          const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.value = 'Submit';
+            submitBtn.textContent = submitBtn.value = 'Submit';
           }
         }
       });
     });
+    <\/script>
   `;
 
-  // Combine HTML form and JS code
-  const fullGeneratedCode = generatedCode + "\n" + jsCode;
-
-  // Display the generated code in the textarea
-  document.getElementById("generatedCode").value = fullGeneratedCode;
+  document.getElementById("generatedCode").value = generatedCode + "\n" + jsCode;
 }
 
   </script>
