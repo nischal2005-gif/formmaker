@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-kr6m65x)@f=1yj64)v@85(6w3-47wt1vwo7_+eyn9z3m0lg=f@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'formbuilder-hbbw.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -129,9 +129,9 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "https://formbuilder-hbbw.onrender.com",
+    # "http://127.0.0.1:5500",
+    # "http://localhost:5500",
+    # "https://formbuilder-hbbw.onrender.com",
 ]
 
 # Static files (CSS, JavaScript, Images)
