@@ -126,9 +126,11 @@ USE_TZ = True
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:5500',  # If your static site is running on localhost at port 5500
     'https://formmaker-x2z7.onrender.com',
+    'https://formbuilder-hbbw.onrender.com',
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    'https://formbuilder-hbbw.onrender.com'
     # "http://127.0.0.1:5500",
     # "http://localhost:5500",
     # "https://formbuilder-hbbw.onrender.com",
